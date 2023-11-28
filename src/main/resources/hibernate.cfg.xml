@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+
+        <property name="connection.url">jdbc:postgresql://localhost:5432/studs</property> <!-- BD Mane -->
+        <property name="connection.driver_class">org.postgresql.Driver</property> <!-- DB Driver -->
+        <property name="connection.username">s367527</property> <!-- DB User -->
+        <property name="connection.password">HZ4o4ezzVPZp9Y5d</property> <!-- DB Password -->
+
+        <property name="dialect">org.hibernate.dialect.PostgresPlusDialect</property> <!-- DB Dialect -->
+        <property name="current_session_context_class">thread</property>
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+        <property name="hbm2ddl.auto">update</property>
+        <property name="hibernate.dbcp.initialSize">5</property>
+        <property name="hibernate.dbcp.maxTotal">20</property>
+        <property name="hibernate.dbcp.maxIdle">10</property>
+        <property name="hibernate.dbcp.minIdle">5</property>
+        <property name="hibernate.dbcp.maxWaitMillis">-1</property>
+        <property name="hibernate.hbm2ddl.auto">create-only</property>
+        <mapping class="webapp.test.models.Calculation" />
+
+
+    </session-factory>
+</hibernate-configuration>

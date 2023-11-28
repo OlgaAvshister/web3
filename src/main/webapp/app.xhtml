@@ -1,0 +1,177 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+    <title>Main Page</title>
+    <h:outputStylesheet library="css" name="styles.css"/>
+</h:head>
+<h:body>
+    <div class="container">
+
+        <div class="header">
+            <h1>Авшистер Ольга</h1>
+            <h2>Группа: P3213</h2>
+            <h2>Вариант: 2324</h2>
+            <br/>
+            <h:link outcome="index">
+                На главную
+            </h:link>
+        </div>
+
+        <div class="graph" id="graphic_container">
+            <canvas id="graphic" width="420px" height="420px"/>
+        </div>
+
+        <h:form styleClass="form" id="form">
+            <div class="x-select">
+                <h:outputLabel for="x">select x</h:outputLabel> <br/>
+
+                <div id="x-links">
+                    <h:commandButton value="-4" id="xlink1">
+                        <f:ajax event="click" onevent="changeX(this, -4)"/>
+                    </h:commandButton>
+                    <h:commandButton value="-3" id="xlink2">
+                        <f:ajax event="click" onevent="changeX(this, -3)"/>
+                    </h:commandButton>
+                    <h:commandButton value="-2" id="xlink3">
+                        <f:ajax event="click" onevent="changeX(this, -2)"/>
+                    </h:commandButton>
+                    <h:commandButton value="-1" id="xlink4">
+                        <f:ajax event="click" onevent="changeX(this, -1)"/>
+                    </h:commandButton>
+                    <h:commandButton value="0" id="xlink5">
+                        <f:ajax event="click" onevent="changeX(this, 0)"/>
+                    </h:commandButton>
+                    <h:commandButton value="1" id="xlink6">
+                        <f:ajax event="click" onevent="changeX(this, 1)"/>
+                    </h:commandButton>
+                    <h:commandButton value="2" id="xlink7">
+                        <f:ajax event="click" onevent="changeX(this, 2)"/>
+                    </h:commandButton>
+                    <h:commandButton value="3" id="xlink8">
+                        <f:ajax event="click" onevent="changeX(this, 3)"/>
+                    </h:commandButton>
+                    <h:commandButton value="4" id="xlink9">
+                        <f:ajax event="click" onevent="changeX(this, 4)"/>
+                    </h:commandButton> <br/>
+
+                    <p:inputText type='hidden' value="#{calculation.x}" name='x' id='x'/>
+
+                </div>
+                <p><h:message id="x-warning" styleClass="warning" for="x"/></p>
+            </div>
+
+            <div class="y-text">
+                <h:outputLabel for="y">enter y</h:outputLabel> <br/>
+                <h:inputText id="y" value="#{calculation.y}" maxlength="12"
+                             validatorMessage="поле y должно соответствовать ограничению [-3;3]" styleClass="y">
+                    <f:validateDoubleRange minimum="-3" maximum="3"/>
+                    <f:validateRequired/>
+                    <f:ajax event="keyup" render="y-warning" execute="y"/>
+                </h:inputText>
+                <p><h:message id="y-warning" styleClass="warning" for="y"/></p>
+            </div>
+
+            <div class="r-select">
+                <h:outputLabel for="r">select r</h:outputLabel> <br/>
+                <p:inputText type='hidden' value="#{calculation.r}" name='r' id='r'/>
+
+                <div id="r-links">
+                    <h:commandButton value="1.0" id="rlink1">
+                        <f:ajax event="click" onevent="changeR(this, 1)"/>
+                    </h:commandButton> <br/>
+                    <h:commandButton value="1.5" id="rlink2">
+                        <f:ajax event="click" onevent="changeR(this, 1.5)"/>
+                    </h:commandButton> <br/>
+                    <h:commandButton value="2.0" id="rlink3">
+                        <f:ajax event="click" onevent="changeR(this, 2)"/>
+                    </h:commandButton> <br/>
+                    <h:commandButton value="2.5" id="rlink4">
+                        <f:ajax event="click" onevent="changeR(this, 2.5)"/>
+                    </h:commandButton> <br/>
+                    <h:commandButton value="3.0" id="rlink5">
+                        <f:ajax event="click" onevent="changeR(this, 3)"/>
+                    </h:commandButton> <br/>
+                </div>
+                <p><h:message id="r-warning" styleClass="warning" for="r"/></p>
+            </div>
+
+            <div class="button-wrap" id="submit-wrap">
+                <h:commandButton id="submit-button" value="check" action="#{calculation.checkArea}" styleClass="button">
+                    <f:ajax execute="@form" render="results-table" onevent="addDot()"/>
+                </h:commandButton>
+                <h:commandButton id="clear-button" value="clear" action="#{engine.clear}" styleClass="button">
+                    <f:ajax render="results-table" onevent="clearDots()"/>
+                </h:commandButton>
+            </div>
+
+            <div class="button-wrap" id="clear-wrap">
+
+            </div>
+
+            <p:remoteCommand name="addPoint" action="#{calculation.checkArea}"/>
+        </h:form>
+
+        <div class="results-holder">
+            <h:dataTable value="#{engine.calculations}" var="row" styleClass="results" headerClass="res-header"
+                         rowClasses="res-row" id="results-table">
+                <h:column>
+                    <f:facet name="header">x</f:facet>
+                    <h:outputText value="#{row.x}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">y</f:facet>
+                    <h:outputText value="#{row.y}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">r</f:facet>
+                    <h:outputText value="#{row.r}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">hit</f:facet>
+                    <h:outputText value="#{row.result ? 'попал' : 'мимо'}"/>
+                </h:column>
+
+            </h:dataTable>
+        </div>
+
+
+    </div>
+
+    <h:outputScript library="js" name="main_graphics.js"/>
+    <h:outputScript library="js" name="coomandlinks_clicker.js"/>
+    <script type="text/javascript">
+        drawGraph(2);
+        provideInteractiveGraphics();
+        //setTimezone([{name: "timezone", value: Intl.DateTimeFormat().resolvedOptions().timeZone}]);
+        let x = '#{calculation.x}';
+        let y = '#{calculation.y}';
+        let r = '#{calculation.r}';
+        let hit = '#{calculation.result}';
+        saveDots(x, y, r, hit);
+        changeR(document.querySelectorAll('#r-links input[value="#{engine.calculations[engine.calculations.size()-1].r}"]')[0], #{engine.calculations[engine.calculations.size()-1].r});
+
+        drawDot(center + x * l, center - y * l, hit ? '#0F0' : '#F00');
+
+    </script>
+    <ui:repeat value="#{engine.calculations}" var="item">
+        <script>
+            //drawDot(center + #{item.x} * l, center - #{item.y} * l, #{item.result} ? '#0F0' : '#F00');
+            saveDots(#{item.x}, #{item.y}, #{item.r}, #{item.result});
+            drawAllDots(#{engine.calculations[engine.calculations.size()-1].r})
+
+        </script>
+    </ui:repeat>
+    <script>
+        console.log(#{engine.calculations[engine.calculations.size()-1].r});
+    </script>
+</h:body>
+</html>
+
+
+
